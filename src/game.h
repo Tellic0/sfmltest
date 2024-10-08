@@ -1,11 +1,12 @@
 #pragma once
+
+#include <iostream>
+
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
-#include <SFML/Window/VideoMode.hpp>
 /*
   Class that acts as the game engine.
 */
@@ -18,9 +19,13 @@ private:
   sf::Event ev;
   sf::VideoMode videoMode;
 
+  // Game objects
+  sf::RectangleShape enemy;
+
   // private functions
   void initVariables();
   void initWindow();
+  void initEnemies();
 
 public:
   // Costructors and Destructors
