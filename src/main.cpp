@@ -1,29 +1,16 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
+#include "game.h"
 
 int main() {
-  sf::RenderWindow window(sf::VideoMode(640, 480), "My first game");
-  sf::Event ev;
+  // Init Game engine
+  Game game;
 
-  while (window.isOpen()) {
+  // Game loop
+  while (game.running()) {
+    // Update
+    game.update();
 
-    while (window.pollEvent(ev)) {
-      switch (ev.type) {
-
-      case sf::Event::Closed:
-        window.close();
-        break;
-
-      case sf::Event::KeyPressed:
-        if (ev.key.code == sf::Keyboard::Escape)
-          window.close();
-        break;
-      }
-    }
-
-    window.clear(sf::Color::White);
-    window.display();
+    // Render
+    game.render();
   }
-
   return 0;
 }
