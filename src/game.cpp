@@ -1,5 +1,4 @@
 #include "game.h"
-#include <SFML/System/Vector2.hpp>
 
 void Game::initVariables() { this->window = nullptr; }
 
