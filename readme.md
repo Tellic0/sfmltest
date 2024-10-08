@@ -1,4 +1,4 @@
-cd build
-cmake .. -G Ninja
-ninja
-./main
+cd build  
+cmake .. -G Ninja  
+ninja  
+./main  
