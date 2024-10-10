@@ -8,6 +8,8 @@ void Game::initVariables() {
   this->enemySpawnTimerMax = 10.f;
   this->enemySpawnTimer = this->enemySpawnTimerMax;
   this->maxEnemies = 5;
+
+  this->playerHP = 100;
 }
 
 void Game::initWindow() {
@@ -37,7 +39,13 @@ Game::Game() {
 Game::~Game() { delete this->window; }
 
 // Accessors
-const bool Game::running() const { return this->window->isOpen(); }
+const bool Game::running() const {
+  if (playerHP > 0) {
+    return this->window->isOpen();
+  } else {
+    return false;
+  }
+}
 
 // Functions
 void Game::spawnEnemy() {
@@ -123,12 +131,19 @@ void Game::updateEnemies() {
       }
     }
 
-    // If the enemy is below window delete him
-    if (this->enemies[i].getPosition().y > this->window->getSize().y)
+    // If the enemy is below window delete him and lower player hp
+    if (this->enemies[i].getPosition().y > this->window->getSize().y) {
       deleted = true;
+      this->playerHP -= 10;
+    }
 
     if (deleted)
       this->enemies.erase(this->enemies.begin() + i);
+  }
+}
+
+void Game::updatePlayer() {
+  if (this->playerHP <= 0) {
   }
 }
 
@@ -136,6 +151,7 @@ void Game::update() {
   this->pollEvents();
   this->updateMousePositions();
   this->updateEnemies();
+  this->updatePlayer();
 
   std::cout << this->mousePosWindow.x << " " << this->mousePosWindow.y
             << std::endl;

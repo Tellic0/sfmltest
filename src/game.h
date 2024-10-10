@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <ctime>
 #include <iostream>
 #include <vector>
@@ -18,6 +16,10 @@
 class Game {
 private:
   // Variables
+
+  // Player
+  int playerHP;
+
   // Window
   sf::RenderWindow *window;
   sf::Event ev;
@@ -57,6 +59,7 @@ public:
 
   void updateMousePositions();
   void updateEnemies();
+  void updatePlayer();
   void update();
 
   void renderEnemies();
