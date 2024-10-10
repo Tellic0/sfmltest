@@ -1,4 +1,5 @@
 #include "game.h"
+#include <string>
 
 void Game::initVariables() {
   this->window = nullptr;
@@ -38,12 +39,28 @@ void Game::initPlayer() {
                                this->player.getSize().y - 5);
 }
 
+void Game::initText() {
+  this->font.loadFromFile("../assets/fonts/Roboto-Medium.ttf");
+  this->textHP.setFont(font);
+  this->textHP.setFillColor(sf::Color::White);
+  this->textHP.setCharacterSize(30);
+  this->textHP.setString("HP : ");
+  this->textHP.setPosition(0.f, 30.f);
+
+  this->textScore.setFont(font);
+  this->textScore.setFillColor(sf::Color::White);
+  this->textScore.setCharacterSize(30);
+  this->textScore.setString("Score : ");
+  this->textScore.setPosition(0.f, 0.f);
+}
+
 // Constructors / Destructors
 Game::Game() {
   this->initVariables();
   this->initWindow();
   this->initEnemies();
   this->initPlayer();
+  this->initText();
 }
 
 Game::~Game() { delete this->window; }
@@ -185,10 +202,19 @@ void Game::updatePlayer() {
   }
 }
 
+void Game::updateText() {
+  std::string HP = "HP : " + std::to_string(this->playerHP);
+  this->textHP.setString(HP);
+
+  std::string SCORE = "Score : " + std::to_string(this->points);
+  this->textScore.setString(SCORE);
+}
+
 void Game::update() {
   this->pollEvents();
   this->updatePlayer();
   this->updateEnemies();
+  this->updateText();
 }
 
 void Game::renderEnemies() {
@@ -198,6 +224,11 @@ void Game::renderEnemies() {
 }
 
 void Game::renderPlayer() { this->window->draw(this->player); }
+
+void Game::renderText() {
+  this->window->draw(this->textScore);
+  this->window->draw(this->textHP);
+}
 
 void Game::render() {
   /*
@@ -212,6 +243,7 @@ void Game::render() {
   // Draw game objects
   this->renderEnemies();
   this->renderPlayer();
+  this->renderText();
 
   this->window->display();
 }

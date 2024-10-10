@@ -1,7 +1,10 @@
 #pragma once
 
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <ctime>
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include <SFML/Audio.hpp>
@@ -16,6 +19,11 @@
 class Game {
 private:
   // Variables
+
+  // Text
+  sf::Font font;
+  sf::Text textHP;
+  sf::Text textScore;
 
   // Player
   int playerHP;
@@ -41,6 +49,7 @@ private:
   void initWindow();
   void initEnemies();
   void initPlayer();
+  void initText();
 
 public:
   // Costructors and Destructors
@@ -58,9 +67,11 @@ public:
   void updateMousePositions();
   void updateEnemies();
   void updatePlayer();
+  void updateText();
   void update();
 
   void renderEnemies();
   void renderPlayer();
+  void renderText();
   void render();
 };
