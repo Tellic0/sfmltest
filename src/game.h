@@ -25,10 +25,6 @@ private:
   sf::Event ev;
   sf::VideoMode videoMode;
 
-  // Mouse positions
-  sf::Vector2i mousePosWindow;
-  sf::Vector2f mousePosView;
-
   // Game logic
   int points;
   float enemySpawnTimer;
@@ -38,11 +34,13 @@ private:
   // Game objects
   std::vector<sf::RectangleShape> enemies;
   sf::RectangleShape enemy;
+  sf::RectangleShape player;
 
   // private functions
   void initVariables();
   void initWindow();
   void initEnemies();
+  void initPlayer();
 
 public:
   // Costructors and Destructors
@@ -63,5 +61,6 @@ public:
   void update();
 
   void renderEnemies();
+  void renderPlayer();
   void render();
 };

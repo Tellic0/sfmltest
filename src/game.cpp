@@ -1,12 +1,11 @@
 #include "game.h"
-#include <SFML/Window/Mouse.hpp>
 
 void Game::initVariables() {
   this->window = nullptr;
 
   // Game logic
   this->points = 0;
-  this->enemySpawnTimerMax = 10.f;
+  this->enemySpawnTimerMax = 40.f;
   this->enemySpawnTimer = this->enemySpawnTimerMax;
   this->maxEnemies = 5;
 
@@ -14,8 +13,8 @@ void Game::initVariables() {
 }
 
 void Game::initWindow() {
-  this->videoMode.height = 600;
-  this->videoMode.width = 800;
+  this->videoMode.height = 720;
+  this->videoMode.width = 1080;
   this->window =
       new sf::RenderWindow(this->videoMode, "My first game", sf::Style::None);
   this->window->setFramerateLimit(60);
@@ -27,11 +26,24 @@ void Game::initEnemies() {
   this->enemy.setScale(sf::Vector2f(1.f, 1.f));
 }
 
+void Game::initPlayer() {
+  this->player.setSize(sf::Vector2f(200.f, 20.f));
+  this->player.setOutlineColor(sf::Color::Red);
+  this->player.setOutlineThickness(5.f);
+  this->player.setScale(sf::Vector2f(1.f, 1.f));
+  this->player.setFillColor(sf::Color::White);
+  this->player.setPosition((static_cast<float>(this->videoMode.width) / 2) -
+                               (this->player.getSize().x / 2),
+                           static_cast<float>(this->videoMode.height) -
+                               this->player.getSize().y - 5);
+}
+
 // Constructors / Destructors
 Game::Game() {
   this->initVariables();
   this->initWindow();
   this->initEnemies();
+  this->initPlayer();
 }
 
 Game::~Game() { delete this->window; }
@@ -105,18 +117,6 @@ void Game::pollEvents() {
   }
 }
 
-void Game::updateMousePositions() {
-  /*
-  @ return void
-
-  Updates the mouse positions:
-  - Mouse postition relative to window (Vector2i)
-  */
-
-  this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-  this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
-}
-
 void Game::updateEnemies() {
   /*
     @return void
@@ -126,8 +126,6 @@ void Game::updateEnemies() {
     Moves the enemies downwards.
     Removes the enemies at the edge of the screen. //TODO
   */
-
-  bool isMouseClicked = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 
   // Updating the timer for enemy spawning
   if (this->enemies.size() < this->maxEnemies) {
@@ -145,14 +143,11 @@ void Game::updateEnemies() {
     this->enemies[i].move(0.f, 5.f);
     bool deleted = false;
 
-    // Check if clicked upon
-    if (isMouseClicked) {
-      if (this->enemies[i].getGlobalBounds().contains(this->mousePosView)) {
-        deleted = true;
-
-        // Gain points
-        this->points += 10.f;
-      }
+    // Cheack if it collides with the player
+    if (this->enemies[i].getGlobalBounds().intersects(
+            this->player.getGlobalBounds())) {
+      deleted = true;
+      this->points += 10.f;
     }
 
     // If the enemy is below window delete him and lower player hp
@@ -168,13 +163,32 @@ void Game::updateEnemies() {
   }
 }
 
+void Game::updatePlayer() {
+  bool isBoostActive = false;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+    isBoostActive = true;
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (isBoostActive) {
+      this->player.move(-20.f, 0.f);
+    } else {
+      this->player.move(-5.f, 0.f);
+    }
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (isBoostActive) {
+      this->player.move(20.f, 0.f);
+    } else {
+      this->player.move(5.f, 0.f);
+    }
+  }
+}
+
 void Game::update() {
   this->pollEvents();
-  this->updateMousePositions();
+  this->updatePlayer();
   this->updateEnemies();
-
-  std::cout << this->mousePosWindow.x << " " << this->mousePosWindow.y
-            << std::endl;
 }
 
 void Game::renderEnemies() {
@@ -183,17 +197,21 @@ void Game::renderEnemies() {
   }
 }
 
+void Game::renderPlayer() { this->window->draw(this->player); }
+
 void Game::render() {
   /*
     - clear old
-    - render objects
+    - render enemies
+    - render player
     - display frame in window
     Renders the game objects.
   */
   this->window->clear(sf::Color::Black);
 
-  // Draw game objectss
+  // Draw game objects
   this->renderEnemies();
+  this->renderPlayer();
 
   this->window->display();
 }
