@@ -1,5 +1,4 @@
 #include "game.h"
-#include <SFML/Graphics/Color.hpp>
 
 void Game::initVariables() {
   this->window = nullptr;
@@ -23,11 +22,8 @@ void Game::initWindow() {
 
 void Game::initEnemies() {
   this->enemy.setPosition(0.f, 0.f);
-  this->enemy.setSize(sf::Vector2f(100.0f, 100.0f));
-  this->enemy.setScale(sf::Vector2f(0.5f, 0.5f));
-  this->enemy.setFillColor(sf::Color::Cyan);
-  this->enemy.setOutlineColor(sf::Color::Green);
-  this->enemy.setOutlineThickness(1.f);
+  this->enemy.setSize(sf::Vector2f(50.0f, 50.0f));
+  this->enemy.setScale(sf::Vector2f(1.f, 1.f));
 }
 
 // Constructors / Destructors
@@ -62,6 +58,8 @@ void Game::spawnEnemy() {
   bool shouldPush = false;
   float posX = 0.f;
   float posY = 0.f;
+  float paddingX = 20.f;
+  float paddingY = 20.f;
 
   while (!shouldPush) {
     shouldPush = true;
@@ -69,10 +67,10 @@ void Game::spawnEnemy() {
         static_cast<float>(rand() % static_cast<int>(this->window->getSize().x -
                                                      this->enemy.getSize().x));
     for (auto &e : this->enemies) {
-      if (posX < e.getPosition().x + e.getSize().x &&
-          posX + this->enemy.getSize().x > e.getPosition().x &&
-          posY < e.getPosition().y + e.getSize().y &&
-          posY + this->enemy.getSize().y > e.getPosition().y) {
+      if (posX < e.getPosition().x + e.getSize().x + paddingX &&
+          posX + this->enemy.getSize().x + paddingX > e.getPosition().x &&
+          posY < e.getPosition().y + e.getSize().y + paddingY &&
+          posY + this->enemy.getSize().y + paddingY > e.getPosition().y) {
         shouldPush = false;
         break;
       }
@@ -83,7 +81,7 @@ void Game::spawnEnemy() {
     this->enemy.setFillColor(
         sf::Color(rand() % 256, rand() % 256, rand() % 256, 255));
     this->enemy.setOutlineColor(sf::Color::Red);
-    this->enemy.setOutlineThickness(10.f);
+    this->enemy.setOutlineThickness(5.f);
     this->enemies.push_back(this->enemy);
   }
 }
@@ -160,13 +158,10 @@ void Game::updateEnemies() {
       this->playerHP -= 10;
     }
 
-    if (deleted)
+    if (deleted) {
       this->enemies.erase(this->enemies.begin() + i);
-  }
-}
-
-void Game::updatePlayer() {
-  if (this->playerHP <= 0) {
+      i--;
+    }
   }
 }
 
@@ -174,7 +169,6 @@ void Game::update() {
   this->pollEvents();
   this->updateMousePositions();
   this->updateEnemies();
-  this->updatePlayer();
 
   std::cout << this->mousePosWindow.x << " " << this->mousePosWindow.y
             << std::endl;
