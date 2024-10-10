@@ -1,4 +1,5 @@
 #include "game.h"
+#include <SFML/Window/Mouse.hpp>
 
 void Game::initVariables() {
   this->window = nullptr;
@@ -126,6 +127,8 @@ void Game::updateEnemies() {
     Removes the enemies at the edge of the screen. //TODO
   */
 
+  bool isMouseClicked = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+
   // Updating the timer for enemy spawning
   if (this->enemies.size() < this->maxEnemies) {
     if (this->enemySpawnTimer >= this->enemySpawnTimerMax) {
@@ -143,7 +146,7 @@ void Game::updateEnemies() {
     bool deleted = false;
 
     // Check if clicked upon
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+    if (isMouseClicked) {
       if (this->enemies[i].getGlobalBounds().contains(this->mousePosView)) {
         deleted = true;
 
