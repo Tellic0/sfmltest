@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <ctime>
 #include <iostream>
 #include <vector>
@@ -24,6 +25,7 @@ private:
 
   // Mouse positions
   sf::Vector2i mousePosWindow;
+  sf::Vector2f mousePosView;
 
   // Game logic
   int points;
