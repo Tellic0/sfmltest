@@ -1,6 +1,9 @@
 #pragma once
 
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <ctime>
 #include <iostream>
+#include <vector>
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -19,7 +22,17 @@ private:
   sf::Event ev;
   sf::VideoMode videoMode;
 
+  // Mouse positions
+  sf::Vector2i mousePosWindow;
+
+  // Game logic
+  int points;
+  float enemySpawnTimer;
+  float enemySpawnTimerMax;
+  int maxEnemies;
+
   // Game objects
+  std::vector<sf::RectangleShape> enemies;
   sf::RectangleShape enemy;
 
   // private functions
@@ -36,7 +49,14 @@ public:
   const bool running() const;
 
   // Functions
+  void spawnEnemy();
+
   void pollEvents();
+
+  void updateMousePositions();
+  void updateEnemies();
   void update();
+
+  void renderEnemies();
   void render();
 };

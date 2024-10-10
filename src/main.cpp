@@ -1,6 +1,9 @@
 #include "game.h"
 
 int main() {
+  // Init srand
+  srand(static_cast<unsigned>(time(NULL)));
+
   // Init Game engine
   Game game;
 
