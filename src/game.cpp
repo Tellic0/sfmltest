@@ -1,4 +1,5 @@
 #include "game.h"
+#include <SFML/Graphics/Color.hpp>
 
 void Game::initVariables() {
   this->window = nullptr;
@@ -52,17 +53,39 @@ void Game::spawnEnemy() {
   /*
    * @return void
    * Spawns enemies and sets their colour and positions.
-   *  -Sets a random position
-   *  -Sets a random colour
-   *  -Adds enemy to the vector
+   * -Sets a random position and checks until id does not collide with any
+   *  other enemy
+   * -Sets a random colour
+   * -Adds enemy to the
+   *  vector
    */
+  bool shouldPush = false;
+  float posX = 0.f;
+  float posY = 0.f;
 
-  this->enemy.setPosition(
-      static_cast<float>(rand() % static_cast<int>(this->window->getSize().x -
-                                                   this->enemy.getSize().x)),
-      0.f);
-  this->enemy.setFillColor(sf::Color::Green);
-  this->enemies.push_back(this->enemy);
+  while (!shouldPush) {
+    shouldPush = true;
+    posX =
+        static_cast<float>(rand() % static_cast<int>(this->window->getSize().x -
+                                                     this->enemy.getSize().x));
+    for (auto &e : this->enemies) {
+      if (posX < e.getPosition().x + e.getSize().x &&
+          posX + this->enemy.getSize().x > e.getPosition().x &&
+          posY < e.getPosition().y + e.getSize().y &&
+          posY + this->enemy.getSize().y > e.getPosition().y) {
+        shouldPush = false;
+        break;
+      }
+    }
+  }
+  if (shouldPush) {
+    this->enemy.setPosition(posX, posY);
+    this->enemy.setFillColor(
+        sf::Color(rand() % 256, rand() % 256, rand() % 256, 255));
+    this->enemy.setOutlineColor(sf::Color::Red);
+    this->enemy.setOutlineThickness(10.f);
+    this->enemies.push_back(this->enemy);
+  }
 }
 
 void Game::pollEvents() {
