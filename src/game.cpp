@@ -1,6 +1,4 @@
 #include "game.h"
-#include <SFML/Graphics/Color.hpp>
-#include <string>
 
 void Game::initVariables() {
   this->window = nullptr;
@@ -163,7 +161,8 @@ void Game::updateEnemies() {
 
   // Move and update the enemies
   for (int i = 0; i < this->enemies.size(); i++) {
-    this->enemies[i].move(0.f, 5.f);
+    float speed = this->points / 100.f;
+    this->enemies[i].move(0.f, 2.f + speed);
     bool deleted = false;
 
     // Cheack if it collides with the player
@@ -197,16 +196,16 @@ void Game::updatePlayer() {
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
     if (isBoostActive) {
-      this->player.move(-20.f, 0.f);
+      this->player.move(-40.f, 0.f);
     } else {
-      this->player.move(-5.f, 0.f);
+      this->player.move(-15.f, 0.f);
     }
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
     if (isBoostActive) {
-      this->player.move(20.f, 0.f);
+      this->player.move(40.f, 0.f);
     } else {
-      this->player.move(5.f, 0.f);
+      this->player.move(15.f, 0.f);
     }
   }
 }
