@@ -3,6 +3,7 @@
 
 void Game::initVariables() {
   this->window = nullptr;
+  this->isFail = false;
 
   // Game logic
   this->points = 0;
@@ -216,7 +217,6 @@ void Game::updateText() {
 
 void Game::update() {
   // Fail and restart system
-  bool isFail = false;
   if (playerHP <= 0) {
     isFail = true;
   }

@@ -19,6 +19,7 @@
 class Game {
 private:
   // Variables
+  bool isFail;
 
   // Text
   sf::Font font;
