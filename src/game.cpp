@@ -1,4 +1,5 @@
 #include "game.h"
+#include <SFML/Window/Keyboard.hpp>
 
 void Game::initVariables() {
   this->window = nullptr;
@@ -21,6 +22,7 @@ void Game::initWindow() {
 }
 
 void Game::initEnemies() {
+  this->enemies.clear();
   this->enemy.setPosition(0.f, 0.f);
   this->enemy.setSize(sf::Vector2f(50.0f, 50.0f));
   this->enemy.setScale(sf::Vector2f(1.f, 1.f));
@@ -65,13 +67,7 @@ Game::Game() {
 Game::~Game() { delete this->window; }
 
 // Accessors
-const bool Game::running() const {
-  if (playerHP > 0) {
-    return this->window->isOpen();
-  } else {
-    return false;
-  }
-}
+const bool Game::running() const { return this->window->isOpen(); }
 
 // Functions
 void Game::spawnEnemy() {
@@ -219,10 +215,25 @@ void Game::updateText() {
 }
 
 void Game::update() {
-  this->pollEvents();
-  this->updatePlayer();
-  this->updateEnemies();
-  this->updateText();
+  // Fail and restart system
+  bool isFail = false;
+  if (playerHP <= 0) {
+    isFail = true;
+  }
+  if (!isFail) {
+    this->pollEvents();
+    this->updatePlayer();
+    this->updateEnemies();
+    this->updateText();
+  } else {
+    this->points = 0;
+    this->playerHP = 100;
+    this->initPlayer();
+    this->initEnemies();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+      isFail = false;
+    }
+  }
 }
 
 void Game::renderEnemies() {
