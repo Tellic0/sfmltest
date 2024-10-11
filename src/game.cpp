@@ -1,4 +1,5 @@
 #include "game.h"
+#include <SFML/Graphics/Color.hpp>
 #include <string>
 
 void Game::initVariables() {
@@ -107,10 +108,15 @@ void Game::spawnEnemy() {
     }
   }
   if (shouldPush) {
+    // generate healing enemies
+    if ((rand() % 10) + 1 == 1) {
+      this->enemy.setOutlineColor(sf::Color::Green);
+    } else {
+      this->enemy.setOutlineColor(sf::Color::Red);
+    }
     this->enemy.setPosition(posX, posY);
     this->enemy.setFillColor(
         sf::Color(rand() % 256, rand() % 256, rand() % 256, 255));
-    this->enemy.setOutlineColor(sf::Color::Red);
     this->enemy.setOutlineThickness(5.f);
     this->enemies.push_back(this->enemy);
   }
@@ -163,6 +169,9 @@ void Game::updateEnemies() {
     // Cheack if it collides with the player
     if (this->enemies[i].getGlobalBounds().intersects(
             this->player.getGlobalBounds())) {
+      if (this->enemies[i].getOutlineColor() == sf::Color::Green) {
+        this->playerHP += 10;
+      }
       deleted = true;
       this->points += 10.f;
     }
