@@ -1,5 +1,4 @@
 #include "game.h"
-#include <SFML/Window/Keyboard.hpp>
 
 void Game::initVariables() {
   this->window = nullptr;
